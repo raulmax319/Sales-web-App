@@ -10,6 +10,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.EntityFrameworkCore;
 using SalesWebMvc.Models;
+using Pomelo.EntityFrameworkCore.MySql.Infrastructure;
 
 namespace SalesWebMvc
 {
@@ -26,6 +27,15 @@ namespace SalesWebMvc
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllersWithViews();
+
+            services.AddDbContextPool<SalesWebMvcContext>(
+                options => options.UseMySql(
+                    Configuration.GetConnectionString("SalesWebMvcContext"),
+                    new MySqlServerVersion(new Version(8, 0, 22)),
+                    mySqlOptions => mySqlOptions
+                        .CharSetBehavior(CharSetBehavior.NeverAppend))
+                        .EnableSensitiveDataLogging()
+                        .EnableDetailedErrors());
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
