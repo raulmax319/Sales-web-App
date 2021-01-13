@@ -12,6 +12,7 @@ using Microsoft.EntityFrameworkCore;
 using SalesWebMvc.Models;
 using Pomelo.EntityFrameworkCore.MySql.Infrastructure;
 using SalesWebMvc.Data;
+using SalesWebMvc.Services;
 
 
 namespace SalesWebMvc
@@ -40,6 +41,7 @@ namespace SalesWebMvc
                         .EnableDetailedErrors());
 
             services.AddScoped<SeedingService>();
+            services.AddScoped<SellerService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

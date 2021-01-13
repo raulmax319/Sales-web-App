@@ -3,11 +3,19 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using SalesWebMvc.Services;
 
-namespace SalesWebMvc.Controllers
-{
-    public class SellersController : Controller
-    {
-        public IActionResult Index() => View();
+namespace SalesWebMvc.Controllers {
+    public class SellersController : Controller {
+
+        private readonly SellerService _sellerService;
+
+        public SellersController(SellerService ss) {
+            this._sellerService = ss;
+        }
+        public IActionResult Index() {
+            var list = _sellerService.findAll();
+            return View(list);
+        }
     }
 }
