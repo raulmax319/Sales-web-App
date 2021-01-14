@@ -14,6 +14,7 @@ namespace SalesWebMvc.Services {
         public List<Seller> findAll() => _context.seller.ToList();
 
         public void insert(Seller obj) {
+            obj.department = _context.Department.First();
             _context.Add(obj);
             _context.SaveChanges();
         }
