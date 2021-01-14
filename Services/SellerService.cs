@@ -1,6 +1,7 @@
 using System.Linq;
 using System.Collections.Generic;
 using SalesWebMvc.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace SalesWebMvc.Services {
     public class SellerService {
@@ -18,7 +19,7 @@ namespace SalesWebMvc.Services {
             _context.SaveChanges();
         }
 
-        public Seller findById(int id) => _context.seller.FirstOrDefault(o => o.id == id);
+        public Seller findById(int id) => _context.seller.Include(o => o.department).FirstOrDefault(o => o.id == id);
 
         public void remove(int id) {
             var obj = _context.seller.Find(id);
