@@ -16,7 +16,7 @@ namespace SalesWebMvc.Controllers {
         
         public IActionResult Index() => View();
 
-        public async Task<IActionResult> simpleSearch(DateTime? minDate, DateTime? maxDate) {
+        public async Task<IActionResult> SimpleSearch(DateTime? minDate, DateTime? maxDate) {
             if(!minDate.HasValue) minDate = new DateTime(DateTime.Now.Year, 1, 1);
             if(!maxDate.HasValue) maxDate = DateTime.Now;
 
@@ -27,6 +27,15 @@ namespace SalesWebMvc.Controllers {
             return View(result);
         }
 
-        public IActionResult groupSearch() => View();
+        public async Task<IActionResult> GroupingSearch(DateTime? minDate, DateTime? maxDate) {
+            if(!minDate.HasValue) minDate = new DateTime(DateTime.Now.Year, 1, 1);
+            if(!maxDate.HasValue) maxDate = DateTime.Now;
+
+            ViewData["minData"] = minDate.Value.ToString("yyyy-MM-dd");
+            ViewData["maxData"] = minDate.Value.ToString("yyyy-MM-dd");
+
+            var result = await _salesRecordService.findByDateGroupingAsync(minDate, maxDate);
+            return View(result);
+        }
     }
 }
