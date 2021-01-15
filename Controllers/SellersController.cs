@@ -19,34 +19,34 @@ namespace SalesWebMvc.Controllers {
             this._sellerService = ss;
             this._departmentService = ds;
         }
-        public IActionResult Index() {
-            var list = _sellerService.findAll();
+        public async Task<IActionResult> Index() {
+            var list = await _sellerService.findAllAsync();
             return View(list);
         }
 
-        public IActionResult Create() {
-            var depts = _departmentService.findAll();
+        public async Task<IActionResult> Create() {
+            var depts = await _departmentService.findAllAsync();
             var viewModel = new SellerFormViewModel { departments = depts };
             return View(viewModel);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Create(Seller seller) {
+        public async Task<IActionResult> Create(Seller seller) {
             if(!ModelState.IsValid) {
-                var depts = _departmentService.findAll();
+                var depts = await _departmentService.findAllAsync();
                 var viewModel = new SellerFormViewModel { seller = seller, departments = depts };
                 return View(viewModel);
             }
             
-            _sellerService.insert(seller);
+            await _sellerService.insertAsync(seller);
             return RedirectToAction(nameof(Index));
         }
 
-        public IActionResult Delete(int? id) {
+        public async Task<IActionResult> Delete(int? id) {
             if(id == null) return RedirectToAction(nameof(Error), new { message = "ID not provided" });
 
-            var obj = _sellerService.findById(id.Value);
+            var obj = await _sellerService.findByIdAsync(id.Value);
             
             if(obj == null) return RedirectToAction(nameof(Error), new { message = "ID not found" });;
 
@@ -55,29 +55,29 @@ namespace SalesWebMvc.Controllers {
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Delete(int id) {
-            _sellerService.remove(id);
+        public async Task<IActionResult> Delete(int id) {
+            await _sellerService.removeAsync(id);
             return RedirectToAction(nameof(Index));
         }
 
-        public IActionResult Details(int? id) {
+        public async Task<IActionResult> Details(int? id) {
             if(id == null) return RedirectToAction(nameof(Error), new { message = "ID not provided" });;
 
-            var obj = _sellerService.findById(id.Value);
+            var obj = await _sellerService.findByIdAsync(id.Value);
             
             if(obj == null) return RedirectToAction(nameof(Error), new { message = "ID not found" });;
 
             return View(obj);
         }
 
-        public IActionResult Edit(int? id) {
+        public async Task<IActionResult> Edit(int? id) {
             if(id == null) return RedirectToAction(nameof(Error), new { message = "ID not provided" });;
 
-            var obj = _sellerService.findById(id.Value);
+            var obj = await _sellerService.findByIdAsync(id.Value);
 
             if(obj == null) return RedirectToAction(nameof(Error), new { message = "ID not found" });;
 
-            List<Department> depts = _departmentService.findAll();
+            List<Department> depts = await _departmentService.findAllAsync();
             SellerFormViewModel viewModel = new SellerFormViewModel { seller = obj, departments = depts };
             
             return View(viewModel);
@@ -85,9 +85,9 @@ namespace SalesWebMvc.Controllers {
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Edit(int id, Seller seller) {
+        public async Task<IActionResult> Edit(int id, Seller seller) {
             if(!ModelState.IsValid) {
-                var depts = _departmentService.findAll();
+                var depts = await _departmentService.findAllAsync();
                 var viewModel = new SellerFormViewModel { seller = seller, departments = depts };
                 return View(viewModel);
             }
@@ -95,7 +95,7 @@ namespace SalesWebMvc.Controllers {
             if(id != seller.id) return RedirectToAction(nameof(Error), new { message = "ID mismatch" });;
 
             try {
-                _sellerService.update(seller);
+                await _sellerService.updateAsync(seller);
 
                 return RedirectToAction(nameof(Index));
             }
